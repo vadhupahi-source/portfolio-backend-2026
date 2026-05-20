@@ -6,12 +6,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Gmail Setup
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'vadhupahi@gmail.com',
-    pass: 'ugui veut tpjy qlok'
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
 
@@ -27,11 +26,10 @@ app.get('/api/profile', (req, res) => {
 
 app.post('/api/contact', async (req, res) => {
   const { name, email, message } = req.body;
-
   try {
     await transporter.sendMail({
-      from: 'vadhupahi@gmail.com',
-      to: 'vadhupahi@gmail.com',
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
       subject: `📬 Portfolio Message from ${name}`,
       html: `
         <h2>புதிய Message வந்தது!</h2>
@@ -40,7 +38,6 @@ app.post('/api/contact', async (req, res) => {
         <p><b>Message:</b> ${message}</p>
       `
     });
-
     res.json({ success: true });
   } catch (error) {
     console.error(error);
