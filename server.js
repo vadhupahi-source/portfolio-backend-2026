@@ -1,9 +1,19 @@
 const express = require('express');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Gmail Setup
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'vadhupahi@gmail.com',
+    pass: 'ugui veut tpjy qlok'
+  }
+});
 
 app.get('/api/profile', (req, res) => {
   res.json({
@@ -15,11 +25,27 @@ app.get('/api/profile', (req, res) => {
   });
 });
 
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
   const { name, email, message } = req.body;
-  console.log(`📬 Message from: ${name} | ${email}`);
-  console.log(`💬 ${message}`);
-  res.json({ success: true });
+
+  try {
+    await transporter.sendMail({
+      from: 'உங்கள்-gmail@gmail.com',
+      to: 'உங்கள்-gmail@gmail.com',
+      subject: `📬 Portfolio Message from ${name}`,
+      html: `
+        <h2>புதிய Message வந்தது!</h2>
+        <p><b>பெயர்:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Message:</b> ${message}</p>
+      `
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false });
+  }
 });
 
 app.listen(5000, () => {
