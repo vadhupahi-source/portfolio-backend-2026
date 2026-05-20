@@ -30,8 +30,8 @@ app.post('/api/contact', async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: 'உங்கள்-gmail@gmail.com',
-      to: 'உங்கள்-gmail@gmail.com',
+      from: 'vadhupahi@gmail.com',
+      to: 'vadhupahi@gmail.com',
       subject: `📬 Portfolio Message from ${name}`,
       html: `
         <h2>புதிய Message வந்தது!</h2>
